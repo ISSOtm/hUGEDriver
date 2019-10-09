@@ -21,7 +21,7 @@ RGBASM  := rgbasm
 RGBLINK := rgblink
 RGBFIX  := rgbfix
 
-INCDIRS := $(SRCDIR)/ $(SRCDIR)/include/
+INCDIRS := $(SRCDIR)/ $(SRCDIR)/include/ $(SRCDIR)/hUGE/
 PADValue := 0xFF
 
 ASFLAGS := -p $(PADValue) -h $(addprefix -i ,$(INCDIRS))

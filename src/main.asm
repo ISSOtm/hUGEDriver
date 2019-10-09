@@ -37,7 +37,7 @@ rst38:
 
 
 ; VBlank
-    call _dosound
+    call hUGE_TickSound
     reti
     ds 4
 
@@ -117,18 +117,14 @@ _addr = _addr + 1
     ENDR
 
     ;;; TODO: remove this!
-    ld a, %11110000
-    ld [envelope1], a
-    ld a, %11110000
-    ld [envelope2], a
-
-    ;; Load starting speed (7 ticks per row)
-    ld a, 7
-    ld [ticks_per_row], a
+    ; ld a, %11110000
+    ; ld [envelope1], a
+    ; ld a, %11110000
+    ; ld [envelope2], a
     ;;; END OF TODO
 
     ld c, 0 ;; Current order index
-    call _refresh_patterns
+    call hUGE_StartSong
 
 
     ld a, IEF_VBLANK
