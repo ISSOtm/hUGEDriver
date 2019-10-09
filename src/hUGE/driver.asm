@@ -206,7 +206,7 @@ hUGE_TickChannel:
     jr nz, .doFX
     ; Maybe this isn't a FX?
     or c ; Are arguments 0 as well?
-    jr z, .noMoreFX
+    jp z, .noMoreFX
     xor a ; Restore arpeggio ID
 .doFX
     ; Get ID *2
@@ -255,11 +255,11 @@ PURGE hUGE_TARGET
 ; Some value to put in "param working memory" should be returned in A
 ; HL must be preserved
 .fxTable
-    jr .fx_arpeggio
-    jr .fx_portaUp
-    jr .fx_portaDown
-    jr .fx_toneporta
-    jr .fx_vibrato
+    jr .doneWithFX ; NYI .fx_arpeggio
+    jr .doneWithFX ; NYI .fx_portaUp
+    jr .doneWithFX ; NYI .fx_portaDown
+    jr .doneWithFX ; NYI .fx_toneporta
+    jr .doneWithFX ; NYI .fx_vibrato
     jr .fx_setMasterVolume
     jr .fx_callRoutine
     jr .fx_noteDelay
@@ -355,6 +355,10 @@ PURGE hUGE_TARGET
     ld hl, whUGE_CurChannel
     inc [hl]
     ret
+
+    WARN "Move this elsewhere!"
+.hl
+    jp hl
 
 
 hUGE_PlayNote:
