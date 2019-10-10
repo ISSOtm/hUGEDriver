@@ -49,12 +49,6 @@ PURGE hUGE_channel
 
 ;; Temporary memory for processing
 
-; Which of the 4 channels we are currently updating, minus 1
-whUGE_CurChannel:
-    db
-
-;; Temporary storage
-
 whUGE_FXParams:
     db
 whUGE_NRx4Mask:

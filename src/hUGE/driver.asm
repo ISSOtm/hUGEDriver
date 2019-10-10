@@ -44,9 +44,6 @@ hUGE_TickSound::
     and a
     ret z
 
-    xor a
-    ld [whUGE_CurChannel], a
-
     ld hl, whUGE_RemainingTicks
     dec [hl]
     jr nz, .noNewNote
@@ -219,7 +216,6 @@ hUGE_TickChannel:
     jr z, hUGE_ChannelJump
     ld [whUGE_CurChanNote], a
     ld [hli], a
-    ; TODO: what if a >= LAST_NOTE?
 
     ; Read ptr to instrument translation table
     ld a, [hli]
@@ -265,8 +261,8 @@ hUGE_TickChannel:
     inc de
     ldh [c], a
     dec c
-    ld a, [whUGE_CurChannel]
-    cp 3 - 1
+    ld a, c
+    cp LOW(rNR30)
     ld a, [de]
     call z, .loadWave ; This works a tad differently for CH3
     ldh [c], a
@@ -309,7 +305,7 @@ hUGE_TickChannel:
 
     ; Kill CH3 while we load the wave
     xor a
-    ldh [rNR30], a
+    ldh [c], a
 hUGE_TARGET = $FF30 ; Wave RAM
 REPT 16
     ld a, [hli]
@@ -415,11 +411,7 @@ PURGE hUGE_TARGET
     ; Play the channel's note
     ld a, [whUGE_CurChanNote]
     cp LAST_NOTE
-    call c, hUGE_PlayNote
-
-    ; Switch to next channel
-    ld hl, whUGE_CurChannel
-    inc [hl]
+    jp c, hUGE_PlayNote
     ret
 
 ; @param a The ID of the routine to call
@@ -453,12 +445,8 @@ hUGE_PlayNote:
     ld d, a
 
     ; Get ptr to NRx3
-    ld a, [whUGE_CurChannel]
-    ld c, a
-    add a, a
-    add a, a
-    add a, c
-    add a, LOW(rNR13)
+    ld a, [whUGE_CurChanEnvPtr]
+    inc a
     ld c, a
     cp LOW(rNR43)
     jr z, .ch4
