@@ -38,7 +38,7 @@ whUGE_CH\1FX:
 whUGE_CH\1FXBuf:
     db
 ; The FX's params
-whUGB_CH\1FXParam:
+whUGE_CH\1FXParams:
     db
 ENDM
     hUGE_channel 1

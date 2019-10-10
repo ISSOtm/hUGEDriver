@@ -53,7 +53,7 @@ TODO: if we implement dual-tempo tracks, split this argument in two?
 
 ## 8 - Set panning
 
-Sets **all** channels' pannings to either hard left, hard right, both, or none. This is done by writing to `NR50`. Which channel this is called on is irrelevant.
+Sets **all** channels' panning to either hard left, hard right, both, or none. This is done by writing to `NR50`. Which channel this is called on is irrelevant.
 
 **Argument format:** The raw byte to write to `NR50`.
 
@@ -90,6 +90,8 @@ This slot is free, you can suggest us some feature to implement there!
 ## E - Note cut
 
 Silences the channel after a certain amount of ticks.
+
+**Caution:** This does not release CH3, but rather mutes it. If you want to use CH3 for your own purposes, you will have to disable it manually.
 
 **Argument format:** The number of ticks after which to silence the channel, plus 1. This means 1 will immediately kill the channel, the note won't be heard.
 

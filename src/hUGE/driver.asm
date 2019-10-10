@@ -70,11 +70,83 @@ hUGE_TickSound::
     call hUGE_TickChannel
 .noNewNote
 
-    ; TODO: Process effects "update"
+    ; Process effects "update"
+    ld c, LOW(rNR43)
+    ld hl, whUGE_CH4FXParams
+    call .fxUpdate
+    ld c, LOW(rNR33)
+    ld hl, whUGE_CH3FXParams
+    call .fxUpdate
+    ld c, LOW(rNR23)
+    ld hl, whUGE_CH2FXParams
+    call .fxUpdate
+    ld c, LOW(rNR13)
+    ld hl, whUGE_CH1FXParams
+    ; fallthrough
+.fxUpdate
+    ld a, [hli] ; Read the FX number
+    rra ; Is bit 0 set?
+    ret c ; Return if no FX
+    rla ; Restore value
+    add a, LOW(.fxTable)
+    ld e, a
+    adc a, HIGH(.fxTable)
+    sub e
+    ld d, a
+    push de
+    inc hl ; Skip FX buffer, since the FX param tends to get used often
     ret
 
-    ; For volume slide:
+.fxTable
+    jr .noMoreFX ; NYI .fx_arpeggio
+    jr .noMoreFX ; NYI .fx_slideUp
+    jr .noMoreFX ; NYI .fx_slideDown
+    jr .noMoreFX ; NYI .fx_toneporta
+    jr .noMoreFX ; NYI .fx_vibrato
+    jr .noMoreFX ; jr .fx_setMasterVolume ; Does not update
+    jr .fx_callRoutine
+    ; jr .fx_noteDelay
+    ; Panning and duty don't reach here, so use their space for 4 free bytes
+    dec [hl]
+    ret nz
+    nop ; TODO
+    nop
+    jr .fx_noteDelay
+    jr .fx_volSlide
+    jr .noMoreFX ; Free slot
+    nop ; jr .fx_setVolume ; Does not update
+    nop
+    jr .noMoreFX ; Free slot
+    ; jr .fx_noteCut
+    ; jr .fx_SetSpeed ; Does not update
+
+.fx_noteCut ; No need for a `jr` for this one
+    dec [hl]
+    ret nz
+    dec c ; NRx2
+    ; Write 0 to NRx2 to kill the channel
+    xor a
+    ldh [c], a
+    ret
+
+.fx_callRoutine
+    push hl
+    ld h, 1
+    call hUGE_CallUserRoutine
+    pop hl
+    ret nc
+    jr .noMoreFX
+
+.fx_noteDelay
+    ret
+
+.fx_volSlide
     ; Add a signed 5-bit offset to the current volume
+    ; TODO:
+    ret
+
+.noMoreFX
+    ret
 
 
 hUGE_ChannelJump:
@@ -123,6 +195,7 @@ hUGE_TickChannel:
     adc a, d
     sub e
     ld d, a
+    ; Read ptr to B-th pattern
     ld a, [de]
     add a, b
     ld b, a
@@ -130,6 +203,7 @@ hUGE_TickChannel:
     ld a, [de]
     adc a, 0
     ld d, a
+    ld e, b
 
     ; Read effect params
     ld a, [de]
@@ -269,7 +343,7 @@ PURGE hUGE_TARGET
     jr .doneWithFX ; Free slot
     jr .fx_setVolume
     jr .doneWithFX ; Free slot
-    jr .doneWithFX ; Does not do any init
+    jr .doneWithFX ; jr .fx_noteCut Does not do any init
     ; jr .fx_setSpeed
 
 .fx_setSpeed ; No need for a `jr` for this one
@@ -282,16 +356,8 @@ PURGE hUGE_TARGET
 
 .fx_callRoutine
     push hl
-    add a, LOW(hUGE_UserRoutines)
-    ld l, a
-    adc a, HIGH(hUGE_UserRoutines)
-    sub l
-    ld h, a
-    ld a, [hli]
-    ld h, [hl]
-    ld l, a
-    and a
-    call .hl
+    ld h, 0
+    call hUGE_CallUserRoutine
     pop hl
     jr c, .noMoreFX
     jr .doneWithFX
@@ -356,8 +422,18 @@ PURGE hUGE_TARGET
     inc [hl]
     ret
 
-    WARN "Move this elsewhere!"
-.hl
+; @param a The ID of the routine to call
+; @param h Even on 1st call, odd on "updates", including during 1st tick!
+hUGE_CallUserRoutine:
+    add a, LOW(hUGE_UserRoutines)
+    ld l, a
+    adc a, HIGH(hUGE_UserRoutines)
+    sub l
+    rr h ; Transfer bit 0 of H to carry
+    ld h, a
+    ld a, [hli]
+    ld h, [hl]
+    ld l, a
     jp hl
 
 
