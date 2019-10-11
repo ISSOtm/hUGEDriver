@@ -24,7 +24,7 @@ RGBFIX  := rgbfix
 INCDIRS := $(SRCDIR)/ $(SRCDIR)/include/ $(SRCDIR)/hUGE/
 PADValue := 0xFF
 
-ASFLAGS := -p $(PADValue) -h $(addprefix -i ,$(INCDIRS))
+ASFLAGS := -p $(PADValue) -E -h $(addprefix -i ,$(INCDIRS))
 LDFLAGS := -p $(PADValue) -d
 FXFLAGS := -p $(PADValue) -v -i $(GameID) -k $(Licensee) -l 0x33 -m $(MBCType) -n $(Version) -r $(SRAMSize) -t $(GameTitle)
 

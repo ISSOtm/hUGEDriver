@@ -1,4 +1,4 @@
-   Note    FX  Instr  FX args
+ FX args   FX  Instr  Note
 0000.0000-0000-0000-0000.0000
 
 Stuff to do:

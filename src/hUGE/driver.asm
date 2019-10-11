@@ -4,23 +4,44 @@ SECTION "hUGE driver code", hUGE_CODE_SECTION_DECL
 ; Begin playing a song
 ; @param de A pointer to the song that should be played
 ; @return a 1
+; @destroy bc
 hUGE_StartSong::
     ; Prevent playback while we tamper with the state
     xor a
     ld [whUGE_Enabled], a
 
+    ; Read tempo
+    ld a, [de]
+    inc de
+    ld [whUGE_Tempo], a
+
 init_channel: MACRO
     ld hl, whUGE_CH\1OrderPtr
     ; Copy order table ptr
     ld a, [de]
+    ld c, a
+    inc de
     ld [hli], a
     ld a, [de]
+    ld b, a
+    inc de
     ld [hli], a
     ; Init row num (will be 0 after 1st increment)
     ld a, -3
     ld [hli], a
     ; Init order index
     xor a
+    ld [hli], a
+    inc hl ; Skip instrument
+    inc hl ; Skip note
+    ; Write instrument ptr
+    ld a, [bc] ; Read nb of orders
+    add a, a
+    scf
+    adc a, c
+    ld [hli], a
+    ld a, b
+    adc a, 0
     ld [hli], a
 ENDM
     init_channel 1
@@ -53,16 +74,24 @@ hUGE_TickSound::
     ld [hli], a
 
     ;; Play notes
-    ; ld hl, whUGE_CH1OrderIndex
-    ld c, LOW(rNR12)
+    ; ld hl, whUGE_CH1OrderPtr
+    ld a, LOW(rNR12)
+    ld [whUGE_CurChanEnvPtr], a
+    ld c, a ; ld c, LOW(rNR12)
     call hUGE_TickChannel
-    ld hl, whUGE_CH2OrderIndex
-    ld c, LOW(rNR22)
+    ld hl, whUGE_CH2OrderPtr
+    ld a, LOW(rNR22)
+    ld [whUGE_CurChanEnvPtr], a
+    ld c, a ; ld c, LOW(rNR22)
     call hUGE_TickChannel
-    ld hl, whUGE_CH3OrderIndex
-    ld c, LOW(rNR32)
+    ld hl, whUGE_CH3OrderPtr
+    ld a, LOW(rNR32)
+    ld [whUGE_CurChanEnvPtr], a
+    ld c, a ; ld c, LOW(rNR32)
     call hUGE_TickChannel
-    ld hl, whUGE_CH4OrderIndex
+    ld hl, whUGE_CH4OrderPtr
+    ld a, LOW(rNR42)
+    ld [whUGE_CurChanEnvPtr], a
     ld c, LOW(rNR43)
     call hUGE_TickChannel
 .noNewNote
@@ -145,6 +174,20 @@ hUGE_TickSound::
 .noMoreFX
     ret
 
+; @param a The ID of the routine to call
+; @param h Even on 1st call, odd on "updates", including during 1st tick!
+hUGE_CallUserRoutine:
+    add a, LOW(hUGE_UserRoutines)
+    ld l, a
+    adc a, HIGH(hUGE_UserRoutines)
+    sub l
+    rr h ; Transfer bit 0 of H to carry
+    ld h, a
+    ld a, [hli]
+    ld h, [hl]
+    ld l, a
+    jp hl
+
 
 hUGE_ChannelJump:
     dec hl
@@ -178,11 +221,11 @@ hUGE_TickChannel:
     jr c, .noCarry
     inc [hl]
     ld a, [de] ; Read nb of orders
-    inc de
     sub [hl] ; Check if we need to wrap
     jr c, .noCarry
     ld [hl], a ; Apply wrap
 .noCarry
+    inc de ; Skip nb of orders
 
     ; Compute ptr to current row in pattern
     ld a, [hli] ; Read order index
@@ -210,6 +253,7 @@ hUGE_TickChannel:
     ld a, [de]
     inc de
     ld b, a
+    ld [hli], a
     ; Read note byte
     ld a, [de]
     cp NOTE_JUMP
@@ -226,47 +270,10 @@ hUGE_TickChannel:
     ; Reset "restart" bit of NRx4 mask
     res 7, [hl]
 
-    ; Get instrument ptr
+    ; Compute instrument ptr
     ld a, b
     and $0F ; Mask out other bits
-    jr z, .noNewNote
-    ; Index into translation table
-    add a, e
-    ld e, a
-    adc a, d
-    sub e
-    ld d, a
-    ; Read global instrument ID
-    ld a, [de]
-    ; Compute ptr to that instrument
-    ; FIXME: limits the number of instruments to 64
-    add a, a
-    add a, a
-    add a, LOW(hUGE_Instruments)
-    ld e, a
-    adc a, HIGH(hUGE_Instruments)
-    sub e
-    ld d, a
-
-    ; Read NRx4 mask
-    ld a, [de]
-    inc de
-    ld [hl], a
-    ; Write last three bytes to hardware regs
-    ld a, [de]
-    inc de
-    ldh [c], a
-    dec c
-    ld a, [de]
-    inc de
-    ldh [c], a
-    dec c
-    ld a, c
-    cp LOW(rNR30)
-    ld a, [de]
-    call z, .loadWave ; This works a tad differently for CH3
-    ldh [c], a
-.noNewNote
+    call nz, hUGE_LoadInstrument
     ld a, [hli]
     ld [whUGE_NRx4Mask], a
 
@@ -274,9 +281,10 @@ hUGE_TickChannel:
     ld a, b
     and $F0
     jr nz, .doFX
-    ; Maybe this isn't a FX?
-    or c ; Are arguments 0 as well?
-    jp z, .noMoreFX
+    ; Are arguments 0 as well?
+    ld a, [whUGE_FXParams]
+    and a
+    jp z, .noFX
     xor a ; Restore arpeggio ID
 .doFX
     ; Get ID *2
@@ -291,33 +299,6 @@ hUGE_TickChannel:
     ld d, a
     ld a, [whUGE_FXParams] ; Read this now because most FX use it right away
     push de
-    ret
-
-.loadWave
-    push hl
-    ; Compute ptr to wave
-    ; FIXME: limits the number of waves to 16
-    add a, LOW(hUGE_Waves)
-    ld l, a
-    adc a, HIGH(hUGE_Waves)
-    sub e
-    ld h, a
-
-    ; Kill CH3 while we load the wave
-    xor a
-    ldh [c], a
-hUGE_TARGET = $FF30 ; Wave RAM
-REPT 16
-    ld a, [hli]
-    ldh [hUGE_TARGET], a
-hUGE_TARGET = hUGE_TARGET + 1
-ENDR
-PURGE hUGE_TARGET
-    pop hl
-
-    ; Return back to main code, enabling CH3 again
-    ld c, LOW(rNR30)
-    ld a, $80
     ret
 
 
@@ -398,6 +379,7 @@ PURGE hUGE_TARGET
 
 .noMoreFX
     dec hl
+.noFX
     ld a, 1
     ld [hli], a
     ; FX storage doesn't matter, write a dummy value there
@@ -411,26 +393,12 @@ PURGE hUGE_TARGET
     ; Play the channel's note
     ld a, [whUGE_CurChanNote]
     cp LAST_NOTE
-    jp c, hUGE_PlayNote
-    ret
-
-; @param a The ID of the routine to call
-; @param h Even on 1st call, odd on "updates", including during 1st tick!
-hUGE_CallUserRoutine:
-    add a, LOW(hUGE_UserRoutines)
-    ld l, a
-    adc a, HIGH(hUGE_UserRoutines)
-    sub l
-    rr h ; Transfer bit 0 of H to carry
-    ld h, a
-    ld a, [hli]
-    ld h, [hl]
-    ld l, a
-    jp hl
+    ret nc
+    ; Fallthrough
 
 
+; @param a The ID of the note to play
 hUGE_PlayNote:
-    ld a, [whUGE_CurChanNote]
     add a, a
     add a, LOW(hUGE_NoteTable)
     ld e, a
@@ -494,6 +462,81 @@ hUGE_PlayNote:
     ldh [c], a
     ld a, [whUGE_NRx4Mask]
     ldh [rNR44], a
+    ret
+
+
+
+; Loads an instrument into a channel's hardware regs
+; @param a The index of the instrument to use (starting at 1)
+; @param de A pointer to the channel's instrument palette
+; @param hl A pointer to the channel's NRx4 mask
+; @param c A pointer to the highest IO reg to write to
+; @destroy a c de hl
+hUGE_LoadInstrument:
+    dec a
+    ; Index into translation table
+    add a, e
+    ld e, a
+    adc a, d
+    sub e
+    ld d, a
+    ; Read global instrument ID
+    ld a, [de]
+    ; Compute ptr to that instrument
+    ; FIXME: limits the number of instruments to 64
+    add a, a
+    add a, a
+    add a, LOW(hUGE_Instruments)
+    ld e, a
+    adc a, HIGH(hUGE_Instruments)
+    sub e
+    ld d, a
+
+    ; Read NRx4 mask
+    ld a, [de]
+    inc de
+    ld [hl], a
+    ; Write last three bytes to hardware regs
+    ld a, [de]
+    inc de
+    ldh [c], a
+    dec c
+    ld a, [de]
+    inc de
+    ldh [c], a
+    dec c
+    ld a, c
+    cp LOW(rNR30)
+    ld a, [de]
+    call z, .loadWave ; This works a tad differently for CH3
+    ldh [c], a
+    ret
+
+.loadWave
+    push hl
+    ; Compute ptr to wave
+    ; FIXME: limits the number of waves to 16
+    add a, LOW(hUGE_Waves)
+    ld l, a
+    adc a, HIGH(hUGE_Waves)
+    sub e
+    ld h, a
+
+    ; Kill CH3 while we load the wave
+    xor a
+    ldh [c], a
+hUGE_TARGET = $FF30 ; Wave RAM
+REPT 16
+    ld a, [hli]
+    ldh [hUGE_TARGET], a
+hUGE_TARGET = hUGE_TARGET + 1
+ENDR
+PURGE hUGE_TARGET
+    pop hl
+
+    ; Return back to main code, enabling CH3 again
+    ld c, LOW(rNR30)
+    ld a, $80
     ret
 
 

@@ -1,12 +1,31 @@
 
 INCLUDE "hUGE/hUGE.asm"
 
-;; order_cnt is the number of orders times 2
-order_cnt:: db 4
-order1:: dw tfau_arps, unreal
-order2:: dw silence, unreal_arps
-order3:: dw tfau_bass, silence3
-order4:: dw empty, empty
+TestSong::
+    db 7 ; Tempo
+    dw order1 ; CH1 order table
+    dw order2 ; CH2 order table
+    dw order3 ; CH3 order table
+    dw order4 ; CH4 order table
+
+order1:
+    db 1
+    dw walkup
+    ; Table of the IDs of the 15 instruments this pattern will use
+    db 0
+
+order2:
+    db 1
+    dw empty
+
+order3:
+    db 1
+    dw empty
+
+order4:
+    db 1
+    dw empty
+
 
 lunawaves:
 include "TestPatterns/lunawaves.inc"
@@ -25,141 +44,141 @@ include "TestPatterns/tfau_bass.inc"
 
 empty:
 rept 64
-    dn ___, 0, 0
+    row ___, 0, 0
 endr
 
 silence:
-    dn C_4, 1, $C00
+    row C_4, 1, $C00
 rept 63
-    dn ___, 0, $000
+    row ___, 0, $000
 endr
 
 silence3:
-    dn C_4, 2, $C00
+    row C_4, 2, $C00
 rept 63
-    dn ___, 0, $000
+    row ___, 0, $000
 endr
 
 testpatt:
 rept 16
-    dn C_4, 1, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
+    row C_4, 1, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
 endr
 
 testpatt2:
-    dn C_4, 1, $000
+    row C_4, 1, $000
 rept 16
-    dn D_4, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
-    dn ___, 0, $000
+    row D_4, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
+    row ___, 0, $000
 endr
 
 drums:
 rept 16
-    dn C_4, 2, 0
-    dn ___, 0, 0
-    dn ___, 0, 0
-    dn ___, 0, 0
-    dn ___, 0, 0
-    dn ___, 0, 0
-    dn ___, 0, 0
-    dn ___, 0, 0
+    row C_4, 2, 0
+    row ___, 0, 0
+    row ___, 0, 0
+    row ___, 0, 0
+    row ___, 0, 0
+    row ___, 0, 0
+    row ___, 0, 0
+    row ___, 0, 0
 endr
 
 walkup:
 _ASDF = C_3
 rept 64
-    dn _ASDF, 0, 0
+    row _ASDF, 1, 0
 _ASDF = _ASDF + 1
 endr
 
 slideup:
-  dn C_3, 00, $000
+  row C_3, 00, $000
 rept 63
-    dn ___, 00, $101
+    row ___, 00, $101
 endr
 
 arps:
 rept 64
-    dn C_5, 00, $047
+    row C_5, 00, $047
 endr
 
 vib:
-    dn C_5, 00, $000
+    row C_5, 00, $000
 rept 63
-    dn ___, 00, $443
+    row ___, 00, $443
 endr
 
 updown:
-    dn C_4, 00, $105
+    row C_4, 00, $105
 rept 31
-    dn ___, 00, $105
+    row ___, 00, $105
 endr
 rept 32
-    dn ___, 00, $205
+    row ___, 00, $205
 endr
 
 volset:
-    dn C_5, 00, $000
+    row C_5, 00, $000
 rept 32
-    dn ___, 00, $C90
-    dn ___, 00, $CF0
+    row ___, 00, $C90
+    row ___, 00, $CF0
 endr
 
 notecut:
 rept 32
-    dn C_5, 00, $E04
-    dn ___, 00, $000
+    row C_5, 00, $E04
+    row ___, 00, $000
 endr
 
 notedelay:
 rept 32
-    dn C_5, 00, 00
-    dn D#5, 00, $704
+    row C_5, 00, 00
+    row D#5, 00, $704
 endr
 
 volslide:
-    dn C_5, 00, 00
+    row C_5, 00, 00
 rept 63
-    dn ___, 00, $A01
+    row ___, 00, $A01
 endr
 
 setduty:
-    dn C_5, 00, $F04
+    row C_5, 00, $F04
 rept 21
-    dn ___, 00, $900
-    dn ___, 00, $940
-    dn ___, 00, $980
-    dn ___, 00, $9C0
+    row ___, 00, $900
+    row ___, 00, $940
+    row ___, 00, $980
+    row ___, 00, $9C0
 endr
 
 setpan:
-    dn C_5, 00, $811
+    row C_5, 00, $811
     rept 15
-    dn ___, 00, 00
+    row ___, 00, 00
     endr
-    dn C_5, 00, $801
+    row C_5, 00, $801
     rept 15
-    dn ___, 00, 00
+    row ___, 00, 00
     endr
-    dn C_5, 00, $810
+    row C_5, 00, $810
     rept 15
-    dn ___, 00, 00
+    row ___, 00, 00
     endr
-    dn C_5, 00, $800
+    row C_5, 00, $800
     rept 15
-    dn ___, 00, 00
+    row ___, 00, 00
     endr
 
 
@@ -177,7 +196,7 @@ square_instrument:
 .highmask:        db %11000000
 .envelope:        db %11110000 ; rNRx2
 .length_and_duty: db %10000001 ; rNRx1
-.sweep:           db ; rNRx0, ignored for CH2
+.sweep:           db 0 ; rNRx0, ignored for CH2
 
 ;; Format for channel 3:
 

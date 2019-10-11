@@ -123,7 +123,7 @@ _addr = _addr + 1
     ; ld [envelope2], a
     ;;; END OF TODO
 
-    ld c, 0 ;; Current order index
+    ld de, TestSong
     call hUGE_StartSong
 
 

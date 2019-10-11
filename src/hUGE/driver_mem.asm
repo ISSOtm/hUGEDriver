@@ -23,10 +23,13 @@ whUGE_CH\1RowNum:
 whUGE_CH\1OrderIndex:
     db
 ; Which note the channel is currently playing
+whUGE_CH\1Instrument:
+    db
+; Which note the channel is currently playing
 whUGE_CH\1Note:
     db
 ; A pointer to the 15 instruments the channel will use
-whUGE_CH\1InstrTable:
+whUGE_CH\1InstrPalettePtr:
     dw
 ; A mask to be applied to rNRx4
 whUGE_CH\1NRx4Mask:
