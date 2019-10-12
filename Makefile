@@ -1,10 +1,11 @@
 
 .SUFFIXES:
 
-ROMName := hUGEDriver
+ROMName := example
 ROMExt  := gb
 Version := 0
 
+# I'm keeping the name here for posterity, but you'd probably want to change it
 GameTitle := hUGEDriver
 GameID    := HUGE
 Licensee  := HB
@@ -21,7 +22,7 @@ RGBASM  := rgbasm
 RGBLINK := rgblink
 RGBFIX  := rgbfix
 
-INCDIRS := $(SRCDIR)/ $(SRCDIR)/include/ $(SRCDIR)/hUGE/
+INCDIRS := $(SRCDIR)/ $(SRCDIR)/include/ $(SRCDIR)/fortISSimO/
 PADValue := 0xFF
 
 ASFLAGS := -p $(PADValue) -E -h $(addprefix -i ,$(INCDIRS))

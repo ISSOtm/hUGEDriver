@@ -1,5 +1,5 @@
 
-INCLUDE "hUGE/hUGE.asm"
+INCLUDE "fortISSimO/main.asm"
 
 TestSong::
     db 7 ; Tempo
