@@ -16,7 +16,9 @@ order1:
 
 order2:
     db 1
-    dw empty
+    dw testpatt
+    ; Table of the IDs of the 15 instruments this pattern will use
+    db 0
 
 order3:
     db 1
@@ -24,7 +26,9 @@ order3:
 
 order4:
     db 1
-    dw empty
+    dw drums
+    ; Table of the IDs of the 15 instruments this pattern will use
+    db 2
 
 
 lunawaves:
@@ -86,7 +90,7 @@ endr
 
 drums:
 rept 16
-    row C_4, 2, 0
+    row C_4, 1, 0
     row ___, 0, 0
     row ___, 0, 0
     row ___, 0, 0
