@@ -431,18 +431,19 @@ hUGE_PlayNote:
     ; Quantize the note by turning it into a sort of "scientific notation"
     ; e = shift amount
     ; db = Frequency, shifted right until it's only 3 bits
-    ld e, 0
+    ld e, -3
     ; First, enforce working on a single byte for efficiency
     ld a, d
     and %111
     jr z, .emptyHighByte
-    ; Shift right by 4 (5 would be remove an iteration but be slower)
+    ; Shift right by 5
     xor b
     and %1111
     xor b
-    swap a
+    swap a ; This clears carry
+    rra ; Shift right one more time
     ld b, a
-    ld e, 4
+    ld e, -3 + 5
 .emptyHighByte
     ; b = Frequency
     ; Shift right until only 3 significants bits remain
