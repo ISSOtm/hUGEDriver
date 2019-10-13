@@ -97,32 +97,6 @@ EntryPoint:
     jr nz, .copyTile
 
 
-    ; Enable sound globally
-    ld a, $80
-    ld [rAUDENA], a
-    ; Enable all channels in stereo
-    ld a, $FF
-    ld [rAUDTERM], a
-    ; Set volume
-    ld a, $77
-    ld [rAUDVOL], a
-
-    ;; Load some wave data (or code) into _AUD3WAVERAM
-    ld hl, $000 ;; note_table
-_addr = _AUD3WAVERAM
-    REPT 16
-    ld a, [hl+]
-    ld [_addr], a
-_addr = _addr + 1
-    ENDR
-
-    ;;; TODO: remove this!
-    ; ld a, %11110000
-    ; ld [envelope1], a
-    ; ld a, %11110000
-    ; ld [envelope2], a
-    ;;; END OF TODO
-
     ld de, TestSong
     call hUGE_StartSong
 
