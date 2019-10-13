@@ -69,7 +69,9 @@ This also allows setting, for all channels, the sound length.
 
 Adds (or subtracts) some amount from the channel's volume every so often.
 
-TODO: how the hecc should this work with CH3?
+**Note:** Due to the way the Game Boy works, the note will be retriggered every time the volume is changed. If you don't want that, use instrument envelopes instead.
+
+**Note:** After the first volume change, this FX will kill instrument envelopes.
 
 **Argument format:** The upper 5 bits are the (signed!) amount to add to the volume; the lower 3 are how many ticks should elapse between volume changes, 1 meaning "do so on every tick".
 
