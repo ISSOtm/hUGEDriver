@@ -27,11 +27,11 @@ TODO:
 
 ## 5 - Set master volume
 
-Changes the master volume by writing to `NR51`. Which channel this is called on is irrelevant.
+Changes the master volume by writing to `NR50`. Which channel this is called on is irrelevant.
 
 This FX also allows toggling the VIN audio input, though you're not likely to use it.
 
-**Argument format:** The raw byte to write to `NR51`.
+**Argument format:** The raw byte to write to `NR50`.
 
 ## 6 - Call routine
 
@@ -53,9 +53,9 @@ TODO: if we implement dual-tempo tracks, split this argument in two?
 
 ## 8 - Set panning
 
-Sets **all** channels' panning to either hard left, hard right, both, or none. This is done by writing to `NR50`. Which channel this is called on is irrelevant.
+Sets **all** channels' panning to either hard left, hard right, both, or none. This is done by writing to `NR51`. Which channel this is called on is irrelevant.
 
-**Argument format:** The raw byte to write to `NR50`.
+**Argument format:** The raw byte to write to `NR51`.
 
 ## 9 - Set duty cycle
 
