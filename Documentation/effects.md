@@ -37,6 +37,8 @@ This FX also allows toggling the VIN audio input, though you're not likely to us
 
 Calls an ASM snippet, particularly useful for syncing gameplay and music somehow. Make sure to put pointers to the routines in `hUGE_UserRoutines`!
 
+The routine will be called with C = the number of times it's been called already.
+
 *TODO:* Write a sort of API so routines can interact with the sound engine better
 
 **Argument format:** The ID of the routine to call times 2. That is, use 00 to call the 1st routine in the table, 02 for the second, and so on.
