@@ -1,7 +1,7 @@
 # Driver documentation
 
 - [Terms and concepts](terms-and-concepts.md)
-- [Effects](effects.md)
+- [Format](format.md)
 
 ## Usage
 
