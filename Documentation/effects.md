@@ -55,7 +55,7 @@ TODO: if we implement dual-tempo tracks, split this argument in two?
 
 ## 8 - Set panning
 
-Sets **all** channels' panning to either hard left, hard right, both, or none. This is done by writing to `NR51`. Which channel this is called on is irrelevant.
+Sets **all** channels' panning, each to either hard left, hard right, both, or none. This is done by writing to `NR51`. Which channel this is called on is irrelevant.
 
 **Argument format:** The raw byte to write to `NR51`.
 
