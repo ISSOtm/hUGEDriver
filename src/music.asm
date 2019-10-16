@@ -10,13 +10,13 @@ TestSong::
 
 order1:
     db 1
-    dw walkup
+    dw arps
     ; Table of the IDs of the 15 instruments this pattern will use
     db 0
 
 order2:
     db 1
-    dw testpatt
+    dw empty
     ; Table of the IDs of the 15 instruments this pattern will use
     db 0
 
@@ -115,7 +115,7 @@ endr
 
 arps:
 rept 64
-    row C_5, 00, $047
+    row C_5, 1, $047
 endr
 
 vib:

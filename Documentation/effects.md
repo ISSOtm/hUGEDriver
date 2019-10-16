@@ -21,7 +21,9 @@ Effects use 12 bits: 4 "type" bits, and 8 "parameter" bits. Here is the list of 
 
 ## 0 - Arpeggio
 
-TODO:
+Rapidly alternates between three different notes: base note, base note + x, base note + y, repeat. All offsets are capped to not go beyond the largest note.
+
+**Argument format:** $xy, where x and y are explained above. Note that both x and y are unsigned!
 
 **Note:** An arpeggio with argument 00 does nothing, and as such is the standard way to specify "no FX"
 
