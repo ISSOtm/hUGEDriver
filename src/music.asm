@@ -10,7 +10,7 @@ TestSong::
 
 order1:
     db 1
-    dw arps
+    dw updown
     ; Table of the IDs of the 15 instruments this pattern will use
     db 0
 
@@ -26,7 +26,7 @@ order3:
 
 order4:
     db 1
-    dw drums
+    dw empty
     ; Table of the IDs of the 15 instruments this pattern will use
     db 2
 
@@ -108,9 +108,9 @@ _ASDF = _ASDF + 1
 endr
 
 slideup:
-  row C_3, 00, $000
+  row C_3, 1, $000
 rept 63
-    row ___, 00, $101
+    row ___, 0, $10C
 endr
 
 arps:
@@ -125,12 +125,12 @@ rept 63
 endr
 
 updown:
-    row C_4, 00, $105
+    row G_3, 1, $105
 rept 31
-    row ___, 00, $105
+    row ___, 0, $105
 endr
 rept 32
-    row ___, 00, $205
+    row ___, 0, $205
 endr
 
 volset:
@@ -197,9 +197,9 @@ hUGE_Instruments::
 ;; Format for channels 1 and 2:
 
 square_instrument:
-.highmask:        db %11000000
+.highmask:        db %10000000
 .envelope:        db %11110000 ; rNRx2
-.length_and_duty: db %10000001 ; rNRx1
+.length_and_duty: db %10000000 ; rNRx1
 .sweep:           db 0 ; rNRx0, ignored for CH2
 
 ;; Format for channel 3:
