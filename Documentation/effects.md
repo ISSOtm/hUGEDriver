@@ -27,6 +27,22 @@ Rapidly alternates between three different notes: base note, base note + x, base
 
 **Note:** An arpeggio with argument 00 does nothing, and as such is the standard way to specify "no FX"
 
+## 1 - Slide up
+
+Decreases the frequency played, sliding towards higher notes. Be careful that the offset is not reset until a new note is played (retriggered)!
+
+**Argument format:** The increase in "period" per tick. The higher, the sharper the change.
+
+**Note:** Value $00 does nothing, and may be end up special-cased.
+
+## 2 - Slide down
+
+Increases the frequency played, sliding towards lower notes. Be careful that the offset is not reset until a new note is played (retriggered)!
+
+**Argument format:** The decrease in "period" per tick. The higher, the sharper the change.
+
+**Note:** Value $00 does nothing, and may end up special-cased.
+
 ## 5 - Set master volume
 
 Changes the master volume by writing to `NR50`. Which channel this is called on is irrelevant.
