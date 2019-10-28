@@ -103,6 +103,8 @@ This slot is free, you can suggest us some feature to implement there!
 
 Sets the channel's volume to a given value.
 
+**WARNING:** Using this FX without playing a note on the same row will trigger a hardware bug!
+
 **Argument format:** The volume to set the channel to, shifted right four times. The low 4 bits **must** be reset!
 
 ## D - Free slot

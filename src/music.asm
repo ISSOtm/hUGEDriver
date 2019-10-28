@@ -10,7 +10,7 @@ TestSong::
 
 order1:
     db 1
-    dw updown
+    dw setpan
     ; Table of the IDs of the 15 instruments this pattern will use
     db 0
 
@@ -134,49 +134,49 @@ rept 32
 endr
 
 volset:
-    row C_5, 00, $000
+    row C_5, 1, $000
 rept 32
-    row ___, 00, $C90
-    row ___, 00, $CF0
+    row ___, 0, $C90
+    row ___, 0, $CF0
 endr
 
 notecut:
 rept 32
-    row C_5, 00, $E04
-    row ___, 00, $000
+    row C_5, 1, $E04
+    row ___, 0, $000
 endr
 
 notedelay:
 rept 32
-    row C_5, 00, 00
-    row D#5, 00, $704
+    row C_5, 1, 00
+    row D#5, 0, $704
 endr
 
 volslide:
-    row C_5, 00, 00
+    row C_5, 1, 00
 rept 63
-    row ___, 00, $A01
+    row ___, 0, $AF9
 endr
 
 setduty:
-    row C_5, 00, $F04
+    row C_5, 1, $F04
 rept 21
-    row ___, 00, $900
-    row ___, 00, $940
-    row ___, 00, $980
-    row ___, 00, $9C0
+    row ___, 0, $900
+    row ___, 0, $940
+    row ___, 0, $980
+    row ___, 0, $9C0
 endr
 
 setpan:
-    row C_5, 00, $811
+    row C_5, 1, $811
     rept 15
-    row ___, 00, 00
+    row ___, 0, 00
     endr
-    row C_5, 00, $801
+    row C_5, 1, $801
     rept 15
-    row ___, 00, 00
+    row ___, 0, 00
     endr
-    row C_5, 00, $810
+    row C_5, 1, $810
     rept 15
     row ___, 00, 00
     endr
