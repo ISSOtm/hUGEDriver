@@ -13,6 +13,8 @@ Note that instrument bytes are mostly directly written to hardware registers, so
     <dd>If reset, values written to NRx1 (length) will be ignored by the hardware.</dd>
 </dl>
 
+---
+
 #### Square channels (CH1, CH2)
 
 ##### Second byte: NRx2 (volume/envelope)
@@ -48,6 +50,8 @@ Note that this byte is ignored by the hardware for CH2!
     <dd>This selects how many increments or decrements will occur.</dd>
 </dl>
 
+---
+
 #### Wave channel
 
 ##### Second byte: NR32 (volume)
@@ -72,6 +76,8 @@ Note that this byte is ignored by the hardware for CH2!
     <dt>Bits 3-0 - Zero</dt>
     <dd>These bits must be 0, otherwise the code will malfunction.</dd>
 </dl>
+
+---
 
 #### Noise channel
 
