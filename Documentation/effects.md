@@ -105,6 +105,8 @@ Adds (or subtracts) some amount from the channel's volume every so often.
 
 **Argument format:** The upper 5 bits are the (signed!) amount to add to the volume; the lower 3 are how many ticks should elapse between volume changes, 1 meaning "do so on every tick".
 
+**Note:** Since this FX retriggers the note, using it with argument $00 is the standard way to retrigger a note.
+
 ## B - Free slot
 
 This slot is free, you can suggest us some feature to implement there!
