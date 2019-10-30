@@ -53,6 +53,8 @@ Bends the pitch to the note, instead of playing it. This FX does not play the ta
 
 **Note:** Value $00 does nothing, and may end up special-cased.
 
+## 4 - Vibrato
+
 ## 5 - Set master volume
 
 Changes the master volume by writing to `NR50`. Which channel this is called on is irrelevant.

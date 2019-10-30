@@ -10,7 +10,7 @@ TestSong::
 
 order1:
     db 1
-    dw setpan
+    dw vib
     ; Table of the IDs of the 15 instruments this pattern will use
     db 0
 
@@ -119,9 +119,9 @@ rept 64
 endr
 
 vib:
-    row C_5, 00, $000
+    row C_5, 1, $4C8
 rept 63
-    row ___, 00, $443
+    row ___, 00, $400
 endr
 
 updown:
