@@ -43,6 +43,16 @@ Increases the frequency played, sliding towards lower notes. Be careful that the
 
 **Note:** Value $00 does nothing, and may end up special-cased.
 
+## 3 - Toneporta
+
+Bends the pitch to the note, instead of playing it. This FX does not play the target note, but instead gradually slides the frequency towards it.
+
+**Note:** Calling this FX with no note as the parameter will continue sliding towards the last note played.
+
+**Argument format:** The increase in "period" per tick. The higher, the faster the change.
+
+**Note:** Value $00 does nothing, and may end up special-cased.
+
 ## 5 - Set master volume
 
 Changes the master volume by writing to `NR50`. Which channel this is called on is irrelevant.
