@@ -55,6 +55,12 @@ Bends the pitch to the note, instead of playing it. This FX does not play the ta
 
 ## 4 - Vibrato
 
+Rapidly waves the pitch close to the current one.
+
+**Argument format:** $xy, where `x` is the "speed" and `y` the "depth". The higher the speed. There is a special case: `$00` will use the previous vibrato's arguments *and not reset it*.
+
+**Note:** Using this right after a portamento will perform the vibrato around that frequency, not around the original note's.
+
 ## 5 - Set master volume
 
 Changes the master volume by writing to `NR50`. Which channel this is called on is irrelevant.
