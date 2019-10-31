@@ -10,7 +10,7 @@ TestSong::
 
 order1:
     db 1
-    dw vib
+    dw empty
     ; Table of the IDs of the 15 instruments this pattern will use
     db 0
 
@@ -21,14 +21,18 @@ order2:
     db 0
 
 order3:
+    db 2
+    dw tfau_bass
+    dw tfau_bass2
+    ; Table of the IDs of the 15 instruments this pattern will use
     db 1
-    dw empty
+    db 2
 
 order4:
     db 1
     dw empty
     ; Table of the IDs of the 15 instruments this pattern will use
-    db 2
+    db 3
 
 
 lunawaves:
@@ -45,6 +49,9 @@ include "TestPatterns/tfau_arps.inc"
 
 tfau_bass:
 include "TestPatterns/tfau_bass.inc"
+
+tfau_bass2:
+include "TestPatterns/tfau_bass2.inc"
 
 empty:
 rept 64
@@ -196,27 +203,29 @@ hUGE_Instruments::
 
 ;; Format for channels 1 and 2:
 
-square_instrument:
-.highmask:        db %10000000
-.envelope:        db %11110000 ; rNRx2
-.length_and_duty: db %10000000 ; rNRx1
-.sweep:           db 0 ; rNRx0, ignored for CH2
+    db %11000000 ; rNRx4 mask
+    db %11110000 ; rNRx2: envelope
+    db %10000001 ; rNRx1: duty & length
+    db 0 ; rNRx0: sweep, ignored for CH2
 
 ;; Format for channel 3:
 
-voice_instrument:
-.highmask: db %10000000
-.volume:   db %00100000 ; rNR32
-.length:   db 0 ; rNR31
-.wave:     db 0 ; Index into wave collection, multiplied by 16
+    db %10000000 ; rNR34 mask
+    db %00100000 ; rNR32: envelope
+    db 0         ; rNR31: length
+    db $00       ; Index into wave collection, multiplied by 16
+
+    db %10000000
+    db %00100000
+    db 0
+    db $10
 
 ;; Format for channel 4:
 
-noise_instrument:
-.highmask:        db %10000000
-.step_and_ratio:  db 0 ; rNR43
-.envelope:        db %10100001 ; rNR42
-.length:          db 0 ; rNR41
+    db %10000000 ; rNR44 mask
+    db 0         ; rNR43: LFSR width
+    db %10100001 ; rNR42: envelope
+    db 0         ; rNR41: length
 
 
 ;;;;;;;;;;;;;
@@ -236,4 +245,11 @@ hUGE_UserRoutines::
 
 hUGE_Waves::
 
-;; nothing yet
+rept 16
+db %11110000
+endr
+
+rept 8
+db %11111111
+db %00000000
+endr
