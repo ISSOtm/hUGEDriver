@@ -1,62 +1,45 @@
 
 .SUFFIXES:
 
-ROMName := example
-ROMExt  := gb
-Version := 0
-
-# I'm keeping the name here for posterity, but you'd probably want to change it
-GameTitle := hUGEDriver
-GameID    := HUGE
-Licensee  := HB
-MBCType   := 0
-SRAMSize  := 0
-
-SRCDIR := src
-OBJDIR := obj
-DEPDIR := dep
-BINDIR := bin
-
 
 RGBASM  := rgbasm
 RGBLINK := rgblink
 RGBFIX  := rgbfix
-
-INCDIRS := $(SRCDIR)/ $(SRCDIR)/include/ $(SRCDIR)/fortISSimO/
-PADValue := 0xFF
-
-ASFLAGS := -p $(PADValue) -E -h $(addprefix -i ,$(INCDIRS))
-LDFLAGS := -p $(PADValue) -d
-FXFLAGS := -p $(PADValue) -v -i $(GameID) -k $(Licensee) -l 0x33 -m $(MBCType) -n $(Version) -r $(SRAMSize) -t $(GameTitle)
+RGBGFX  := rgbgfx
 
 
-VPATH := $(INCDIRS)
-
-SRCLIST := $(wildcard $(SRCDIR)/*.asm)
-OBJLIST := $(patsubst $(SRCDIR)/%.asm,$(OBJDIR)/%.o,$(SRCLIST))
-DEPLIST := $(patsubst $(SRCDIR)/%.asm,$(DEPDIR)/%.d,$(SRCLIST))
+SRCS := $(wildcard src/*.asm)
+OBJS := $(patsubst src/%.asm,obj/%.o,${SRCS})
 
 
-all: $(BINDIR)/$(ROMName).$(ROMExt)
+all: bin/example.gb bin/example.gbs
 .PHONY: all
 
 clean:
-	rm -rf $(OBJDIR) $(DEPDIR) $(BINDIR)
+	rm -rf obj bin
 .PHONY: clean
 
-$(BINDIR)/$(ROMName).$(ROMExt): $(OBJLIST)
-	@mkdir -p $(@D)
-	$(RGBLINK) $(LDFLAGS) -m $(@:.$(ROMExt)=.map) -n $(@:.$(ROMExt)=.sym) -o $@ $^
-	$(RGBFIX) $(FXFLAGS) $@
+bin/example.gb bin/example.sym bin/example.map: ${OBJS}
+	@mkdir -p ${@D}
+	${RGBLINK} -p 0xFF -d -m bin/example.map -n bin/example.sym -o bin/example.gb $^
+	${RGBFIX} -p 0xFF -v bin/example.gb
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.asm
-	@mkdir -p $(@D)
-	$(RGBASM) $(ASFLAGS) -o $@ $<
+obj/%.o: src/%.asm
+	@mkdir -p ${@D}
+	${RGBASM} -h -p 0xFF -i src/include/ -i src/fortISSimO/ -o $@ $<
 
-$(DEPDIR)/%.d: $(SRCDIR)/%.asm
-	@mkdir -p $(@D)
-	$(RGBASM) $(ASFLAGS) -M $@ -MP -MQ $(OBJDIR)/$*.o -MQ $@ $<
 
-ifneq ($(MAKECMDGOALS),clean)
-include $(DEPLIST)
-endif
+bin/example.gbs: gbs.asm obj/syms.asm bin/example.gb
+	@mkdir -p ${@D}
+	${RGBASM} $< -o - | ${RGBLINK} -x -o $@ -
+
+obj/syms.asm: bin/example.sym
+	@mkdir -p ${@D}
+	sed -E 's/^\s*[0-9A-Fa-f]+:([0-9A-Fa-f]+)\s+([A-Za-z_][A-Za-z0-9_@#$.]*)\s*$$/DEF \2 equ $$\1/;t;d' $< >$@
+
+
+obj/%.2bpp: src/%.flags src/%.png
+	@mkdir -p ${@D}
+	${RGBGFX} -o $@ @$^
+
+obj/main.o: obj/chicago8x8.2bpp

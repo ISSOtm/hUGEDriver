@@ -1,3 +1,2 @@
-obj/
-dep/
-bin/
+/obj/
+/bin/
