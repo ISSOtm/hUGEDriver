@@ -50,6 +50,15 @@ EntryPoint:
 	dec c
 	jr nz, .copyMap
 
+	; Clear top two rows of the window tilemap.
+	ld hl, $9C00
+	ld a, " "
+	ld c, SCRN_VX_B * 2
+.clearWinTilemap
+	ld [hli], a
+	dec c
+	jr nz, .clearWinTilemap
+
 	ld hl, MusicDriverEnd - MusicDriver
 	ld de, $99E8
 	call PrintU16
@@ -57,13 +66,16 @@ EntryPoint:
 	ld de, $9A08
 	call PrintU16
 
-	ld a, LCDCF_ON | LCDCF_BGON
+	ld a, LCDCF_ON | LCDCF_WINON | LCDCF_WIN9C00 | LCDCF_BGON
 	ldh [rLCDC], a
 	xor a
 	ldh [rSCX], a
 	ldh [rSCY], a
 	ld a, $E4
 	ldh [rBGP], a
+	ldh [rWX], a ; Please be off-screen for the time being.
+	ld a, WIN_SCANLINE
+	ldh [rWY], a
 
 
 MusicInit:
@@ -107,6 +119,10 @@ MusicInit:
 	ld a, $80
 	ld [wGraph.columnMask], a
 	ld [wGraph.tileID], a
+	ld a, 7
+	ld [wWX], a
+	ld hl, Greetz
+	push hl
 
 MainLoop:
 	halt ; Wait for the beginning of scanline #0
@@ -119,6 +135,11 @@ MainLoop:
 
 	ld a, $E4
 	ldh [rBGP], a
+
+
+	; Allow the window to start showing when scheduled.
+	ld a, [wWX]
+	ldh [rWX], a
 
 
 	; Update the CPU graph.
@@ -189,8 +210,6 @@ MainLoop:
 	ld a, h
 	cp $8B
 	jr c, .drawColumn
-	; TODO
-
 
 	; Switch to next column.
 	ld hl, wGraph.columnMask
@@ -202,7 +221,51 @@ MainLoop:
 	res 4, [hl] ; Wrap after 16 tiles.
 .noNextTile
 
-	jr MainLoop
+
+	; Wait to hide the window.
+.waitWinHide
+	ldh a, [rLY]
+	cp WIN_SCANLINE + 8
+	jr nz, .waitWinHide
+	ld a, SCRN_X + 7
+	ldh [rWX], a
+
+	; Move the window left.
+	ld a, [wWX]
+	dec a
+	jr nz, .noNewGreetzChar
+	; Shift all chars left.
+	ld hl, $9C00 + SCRN_X_B + 1
+.shiftGreetzLeft
+:
+	ldh a, [rSTAT]
+	and STATF_BUSY
+	jr nz, :-
+	dec l
+	ld a, d
+	ld d, [hl]
+	ld [hl], a
+	jr nz, .shiftGreetzLeft
+	; Print a new char.
+	pop hl
+:
+	ldh a, [rSTAT]
+	and STATF_BUSY
+	jr nz, :-
+	ld a, [hli]
+	and a
+	jr nz, .noGreetzWrap
+	ld hl, Greetz
+	ld a, [hli]
+.noGreetzWrap
+	ld [$9C00 + SCRN_X_B], a
+	push hl
+	; Move window back right.
+	ld a, 8
+.noNewGreetzChar
+	ld [wWX], a
+
+	jp MainLoop
 
 
 PrintU16:
@@ -212,6 +275,10 @@ PrintU16:
 
 	ld a, c
 	add a, "0"
+	cp "0"
+	jr nz, .some10000s
+	ld a, " "
+.some10000s
 	ld [hli], a
 
 	ld a, d
@@ -244,6 +311,8 @@ wGraph:
 .columnMask: db
 .tileID: db
 
+wWX: db
+
 
 SECTION "Gfx data", ROM0
 
@@ -256,12 +325,12 @@ INCBIN "obj/chicago8x8.2bpp"
 	ds SCRN_X_B, " "
 	db "                    "
 	db "fortISSimO by ISSOtm"
+	db "and SuperDisk.      "
 	db "                    "
-	db "Greetz to SuperDisk,"
-	db "Coffee Bat, Eievui, "
-	db "PinoBatch and GBDev!"
+	db "Special thanks to:  "
+	db "              HI MOM"
 	db "                    "
-	db "CPU:                "
+	db "CPU usage:          "
 	db "  ",$80,$81,$82,$83,$84,$85,$86,$87,$88,$89,$8A,$8B,$8C,$8D,$8E,$8F,"  "
 	db "  ",$90,$91,$92,$93,$94,$95,$96,$97,$98,$99,$9A,$9B,$9C,$9D,$9E,$9F,"  "
 	db "  ",$A0,$A1,$A2,$A3,$A4,$A5,$A6,$A7,$A8,$A9,$AA,$AB,$AC,$AD,$AE,$AF,"  "
@@ -270,7 +339,14 @@ INCBIN "obj/chicago8x8.2bpp"
 	db "Song:   xxxxx bytes "
 	db "                    "
 
-DEF GRAPH_HEIGHT equ 3 * 8 ; pixels.
+def GRAPH_HEIGHT equ 3 * 8 ; pixels.
+def WIN_SCANLINE equ 8 * 8 ; pixels.
+
+
+SECTION "Greetz", ROM0
+
+Greetz:
+	db "Coffee Bat (music), nitro2k01 & calc84maniac (snippets), Eievui & PinoBatch (support code), GBDev (https://gbdev.io), ", 0
 
 
 SECTION "STAT handler", ROM0[$0048]
