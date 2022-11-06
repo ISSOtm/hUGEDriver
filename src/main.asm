@@ -226,7 +226,7 @@ MainLoop:
 .waitWinHide
 	ldh a, [rLY]
 	cp WIN_SCANLINE + 8
-	jr nz, .waitWinHide
+	jr c, .waitWinHide
 	ld a, SCRN_X + 7
 	ldh [rWX], a
 
@@ -346,7 +346,7 @@ def WIN_SCANLINE equ 8 * 8 ; pixels.
 SECTION "Greetz", ROM0
 
 Greetz:
-	db "Coffee Bat (music), nitro2k01 & calc84maniac (snippets), Eievui & PinoBatch (support code), GBDev (https://gbdev.io), ", 0
+	db "Coffee Bat (music), nitro2k01 & calc84maniac (optimisations), Eievui & PinoBatch (support code), GBDev (https://gbdev.io), ", 0, "and you (hacking)!"
 
 
 SECTION "STAT handler", ROM0[$0048]
