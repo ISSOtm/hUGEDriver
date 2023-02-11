@@ -28,6 +28,8 @@ obj/%.o: src/%.asm
 	@mkdir -p ${@D}
 	${RGBASM} -h -p 0xFF -i src/include/ -i src/fortISSimO/ -o $@ $<
 
+obj/music.o: src/fortISSimO/fortISSimO.asm
+
 
 bin/example.gbs: gbs.asm obj/syms.asm bin/example.gb
 	@mkdir -p ${@D}
