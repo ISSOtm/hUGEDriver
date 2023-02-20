@@ -5,6 +5,8 @@ SECTION "Music driver", ROM0[$700] ; Lower than this breaks some GBS players.
 MusicDriverLoadAddr:
 
 MusicDriver:: ; For computing the size.
+DEF FORTISSIMO_ROM equs ""
+DEF FORTISSIMO_RAM equs "WRAM0"
 INCLUDE "fortISSimO.asm"
 MusicDriverEnd:: ; Idem.
 
