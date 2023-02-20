@@ -1,6 +1,7 @@
 # fortISSimO-demo
 
 [fortISSimO](https://github.com/ISSOtm/fortISSimO) is a from-scratch reimplementation of SuperDisk's [hUGEDriver](https://github.com/SuperDisk/hUGEDriver).
+For instructions on how to use fortISSimO in your project, [please check out its readme](https://github.com/ISSOtm/fortISSimO#readme).
 This repo is a simple-ish example project that allows you to create a GB ROM and a GBS file from a hUGETracker export:
 
 0. **Prerequisites**: have [RGBDS](https://rgbds.gbdev.io) and GNU Make installed. (Windows users will probably need [WSL](https://learn.microsoft.com/en-us/windows/wsl/), [MSYS2](https://www.msys2.org), or Cygwin.) If you want to make a GBS file, you must also have `sed` in your PATH.
