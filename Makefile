@@ -29,7 +29,7 @@ bin/example.dbg:
 
 obj/%.o obj/%.dbg: src/%.asm
 	@mkdir -p ${@D}
-	${RGBASM} -h -p 0xFF -i src/include/ -i src/fortISSimO/ -o obj/$*.o $< -DPRINT_DEBUGFILE >obj/$*.dbg
+	${RGBASM} -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/ -o obj/$*.o $< -DPRINT_DEBUGFILE >obj/$*.dbg
 
 obj/music.o: src/fortISSimO/fortISSimO.asm src/fortISSimO/include/hUGE.inc
 
