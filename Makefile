@@ -31,7 +31,7 @@ obj/%.o obj/%.dbg: src/%.asm
 	@mkdir -p ${@D}
 	${RGBASM} -h -p 0xFF -i src/include/ -i src/fortISSimO/ -o obj/$*.o $< -DPRINT_DEBUGFILE >obj/$*.dbg
 
-obj/music.o: src/fortISSimO/fortISSimO.asm
+obj/music.o: src/fortISSimO/fortISSimO.asm src/fortISSimO/include/hUGE.inc
 
 
 bin/example.gbs: gbs.asm obj/syms.asm bin/example.gb
