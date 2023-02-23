@@ -12,7 +12,7 @@ SRCS := $(wildcard src/*.asm)
 OBJS := $(patsubst src/%.asm,obj/%.o,${SRCS})
 
 
-all: bin/example.gb bin/example.gbs
+all: bin/example.gb bin/example.dbg bin/example.gbs
 .PHONY: all
 
 clean:
@@ -24,9 +24,12 @@ bin/example.gb bin/example.sym bin/example.map: ${OBJS}
 	${RGBLINK} -p 0xFF -d -m bin/example.map -n bin/example.sym -o bin/example.gb $^
 	${RGBFIX} -p 0xFF -v bin/example.gb
 
-obj/%.o: src/%.asm
+bin/example.dbg:
+	printf '@debugfile 1.0.0\n@include "../%s"\n' ${OBJS:.o=.dbg} >$@
+
+obj/%.o obj/%.dbg: src/%.asm
 	@mkdir -p ${@D}
-	${RGBASM} -h -p 0xFF -i src/include/ -i src/fortISSimO/ -o $@ $<
+	${RGBASM} -h -p 0xFF -i src/include/ -i src/fortISSimO/ -o obj/$*.o $< -DPRINT_DEBUGFILE >obj/$*.dbg
 
 obj/music.o: src/fortISSimO/fortISSimO.asm
 
