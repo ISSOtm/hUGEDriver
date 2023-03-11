@@ -1,4 +1,5 @@
-; This file serves both to pull in fortISSimO, and to ensure that the GBS can compile correctly.
+; This file serves to ensure that the GBS can compile correctly.
+; In a real project, you should directly `rgbasm src/fortISSimO/fortISSimO.asm` instead.
 
 SECTION "Music driver", ROM0[$700] ; Lower than this breaks some GBS players.
 
@@ -7,7 +8,7 @@ MusicDriverLoadAddr:
 MusicDriver:: ; For computing the size.
 DEF FORTISSIMO_ROM equs ""
 DEF FORTISSIMO_RAM equs "WRAM0"
-INCLUDE "fortISSimO.asm"
+INCLUDE "src/fortISSimO/fortISSimO.asm"
 MusicDriverEnd:: ; Idem.
 
 InitMusic::
@@ -24,5 +25,5 @@ InitMusic::
 	ld a, $77
 	ldh [rNR50], a
 
-	ld de, wyrmhole
+	ld de, DemoSong
 	jp hUGE_StartSong

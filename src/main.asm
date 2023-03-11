@@ -94,7 +94,7 @@ MusicInit:
 	ld a, $77
 	ldh [rNR50], a
 
-	ld de, wyrmhole ;;;; <<<<<< CHANGE THIS TO YOUR SONG DESCRIPTOR <<<<<< ;;;;
+	ld de, DemoSong ; This is the song descriptor that was passed to `teNOR`.
 	call hUGE_StartSong
 
 

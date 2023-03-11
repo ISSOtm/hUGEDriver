@@ -7,9 +7,11 @@ RGBLINK := rgblink
 RGBFIX  := rgbfix
 RGBGFX  := rgbgfx
 
+teNOR := src/fortISSimO/teNOR/target/release/teNOR
 
-SRCS := $(wildcard src/*.asm)
-OBJS := $(patsubst src/%.asm,obj/%.o,${SRCS})
+
+SRCS := $(wildcard src/*.asm) obj/demo_song.asm
+OBJS := $(patsubst %.asm,obj/%.o,$(notdir ${SRCS}))
 
 
 all: bin/example.gb bin/example.dbg bin/example.gbs
@@ -27,11 +29,19 @@ bin/example.gb bin/example.sym bin/example.map: ${OBJS}
 bin/example.dbg:
 	printf '@debugfile 1.0.0\n@include "../%s"\n' ${OBJS:.o=.dbg} >$@
 
-obj/%.o obj/%.dbg: src/%.asm
-	@mkdir -p ${@D}
-	${RGBASM} -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/ -o obj/$*.o $< -DPRINT_DEBUGFILE >obj/$*.dbg
+define assemble
+obj/$2.o obj/$2.dbg: $1
+	@mkdir -p $${@D}
+	$${RGBASM} -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/include/ -o obj/$2.o $$< -DPRINT_DEBUGFILE >obj/$2.dbg
+endef
+$(foreach asm_file,${SRCS},$(eval $(call assemble,${asm_file},$(basename $(notdir ${asm_file})))))
 
-obj/music.o: src/fortISSimO/fortISSimO.asm src/fortISSimO/include/hUGE.inc
+obj/wyrmhole.o: src/fortISSimO/include/fortISSimO.inc
+obj/music.o: src/fortISSimO/fortISSimO.asm src/fortISSimO/include/fortISSimO.inc
+
+obj/demo_song.asm: ${teNOR} src/demo_song.uge
+	@mkdir -p ${@D}
+	$^ $@ --section-type ROMX --song-descriptor DemoSong
 
 
 bin/example.gbs: gbs.asm obj/syms.asm bin/example.gb
@@ -48,3 +58,8 @@ obj/%.2bpp: src/%.flags src/%.png
 	${RGBGFX} -o $@ @$^
 
 obj/main.o: obj/chicago8x8.2bpp
+
+
+# That one *must* be hardcoded; it's only meant to allow the default setting of `${teNOR}` to work.
+src/fortISSimO/teNOR/target/release/teNOR: src/fortISSimO/teNOR/Cargo.toml src/fortISSimO/teNOR/Cargo.lock $(wildcard src/fortISSimO/teNOR/src/*.rs)
+	env -C src/fortISSimO/teNOR cargo build --release
