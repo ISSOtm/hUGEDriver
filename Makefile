@@ -14,19 +14,19 @@ SRCS := $(wildcard src/*.asm) obj/demo_song.asm
 OBJS := $(patsubst %.asm,obj/%.o,$(notdir ${SRCS}))
 
 
-all: bin/example.gb bin/example.dbg bin/example.gbs
+all: bin/fO_demo.gb bin/fO_demo.dbg bin/fO_demo.gbs
 .PHONY: all
 
 clean:
 	rm -rf obj bin
 .PHONY: clean
 
-bin/example.gb bin/example.sym bin/example.map: ${OBJS}
+bin/fO_demo.gb bin/fO_demo.sym bin/fO_demo.map: ${OBJS}
 	@mkdir -p ${@D}
-	${RGBLINK} -p 0xFF -d -m bin/example.map -n bin/example.sym -o bin/example.gb $^
-	${RGBFIX} -p 0xFF -v bin/example.gb
+	${RGBLINK} -p 0xFF -d -m bin/fO_demo.map -n bin/fO_demo.sym -o bin/fO_demo.gb $^
+	${RGBFIX} -p 0xFF -v bin/fO_demo.gb
 
-bin/example.dbg:
+bin/fO_demo.dbg:
 	printf '@debugfile 1.0.0\n@include "../%s"\n' ${OBJS:.o=.dbg} >$@
 
 define assemble
@@ -44,11 +44,11 @@ obj/demo_song.asm: ${teNOR} src/demo_song.uge
 	$^ $@ --section-type ROMX --song-descriptor DemoSong
 
 
-bin/example.gbs: gbs.asm obj/syms.asm bin/example.gb
+bin/fO_demo.gbs: gbs.asm obj/syms.asm bin/fO_demo.gb
 	@mkdir -p ${@D}
 	${RGBASM} $< -o - | ${RGBLINK} -x -o $@ -
 
-obj/syms.asm: bin/example.sym
+obj/syms.asm: bin/fO_demo.sym
 	@mkdir -p ${@D}
 	sed -E 's/^\s*[0-9A-Fa-f]+:([0-9A-Fa-f]+)\s+([A-Za-z_][A-Za-z0-9_@#$.]*)\s*$$/DEF \2 equ $$\1/;t;d' $< >$@
 

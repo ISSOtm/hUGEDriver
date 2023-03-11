@@ -25,4 +25,4 @@ SECTION "GBS", ROM0[0]
 	db "2022" ; Copyright string.
 	ds $70 - @, 0
 
-INCBIN "bin/example.gb", MusicDriverLoadAddr
+INCBIN "bin/fO_demo.gb", MusicDriverLoadAddr
