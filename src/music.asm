@@ -24,4 +24,4 @@ InitMusic::
 	ldh [rNR50], a
 
 	ld de, DemoSong
-	jp hUGE_StartSong
+	jp hUGE_SelectSong

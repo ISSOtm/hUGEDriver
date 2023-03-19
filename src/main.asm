@@ -95,7 +95,7 @@ EntryPoint:
 
 
 	ld de, DemoSong ; This is the song descriptor that was passed to `teNOR`.
-	call hUGE_StartSong
+	call hUGE_SelectSong
 
 
 	; Set up STAT.
