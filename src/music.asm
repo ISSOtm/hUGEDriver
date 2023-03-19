@@ -13,9 +13,7 @@ MusicDriverEnd:: ; Idem.
 
 InitMusic::
 	xor a
-	ld [hUGE_MutedChannels], a
-	ld a, hUGE_NO_WAVE
-	ld [hUGE_LoadedWaveID], a
+	ldh [hUGE_MutedChannels], a
 
 	; Turn on the APU, and set the panning & volume to reasonable defaults.
 	ld a, AUDENA_ON
