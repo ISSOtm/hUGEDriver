@@ -13,6 +13,22 @@ EntryPoint:
 	; Do some general init. Go to `MusicInit` below for the relevant stuff.
 	ld sp, wStackBottom
 
+
+	; You must do this at least once during game startup.
+	xor a
+	ldh [hUGE_MutedChannels], a
+
+	; Turn on the APU, and set the panning & volume to reasonable defaults.
+	ld a, AUDENA_ON
+	ldh [rNR52], a
+	ld a, $FF
+	ldh [rNR51], a
+	ld a, $77
+	ldh [rNR50], a
+
+
+	; Set graphics up.
+
 	; Turn LCD off, safely.
 .waitVBlank
 	ldh a, [rLY]
@@ -77,22 +93,6 @@ EntryPoint:
 	ld a, WIN_SCANLINE
 	ldh [rWY], a
 
-
-MusicInit:
-	; You must do this at least once during game startup.
-	xor a
-	ldh [hUGE_MutedChannels], a
-	ld a, hUGE_NO_WAVE
-	ld [hUGE_LoadedWaveID], a
-
-
-	; Turn on the APU, and set the panning & volume to reasonable defaults.
-	ld a, AUDENA_ON
-	ldh [rNR52], a
-	ld a, $FF
-	ldh [rNR51], a
-	ld a, $77
-	ldh [rNR50], a
 
 	ld de, DemoSong ; This is the song descriptor that was passed to `teNOR`.
 	call hUGE_StartSong
