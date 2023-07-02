@@ -62,5 +62,3 @@ The graph can look fairly static, but this is normal if your song contains mostl
 
 hUGETracker and hUGEDriver are dedicated to the public domain.
 fortISSimO and all of this demo's code is the same, unless otherwise stated; for example, `bcd.asm` from [PinoBatch](https://github.com/pinobatch) is under the Zlib license.
-
-`wyrmhole.asm` is exported from [the example song](https://github.com/SuperDisk/hUGETracker/blob/hUGETracker/Resources/Sample%20Songs/Coffee%20Bat%20-%20Wyrmhole.uge) *Wyrmhole* bundled with hUGETracker, by [Coffee "Valen" Bat](https://github.com/datguywitha3ds), and used with permission for demonstration purposes.
