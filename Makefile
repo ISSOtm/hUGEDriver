@@ -14,8 +14,10 @@ SRCS := $(wildcard src/*.asm) obj/demo_song.asm
 OBJS := $(patsubst %.asm,obj/%.o,$(notdir ${SRCS}))
 
 
-all: bin/fO_demo.gb bin/fO_demo.dbg bin/fO_demo.gbs
-.PHONY: all
+rom: bin/fO_demo.gb bin/fO_demo.dbg
+gbs: bin/fO_demo.gbs
+all: rom gbs
+.PHONY: rom gbs all
 
 clean:
 	rm -rf obj bin
@@ -61,5 +63,5 @@ obj/main.o: obj/chicago8x8.2bpp
 
 
 # That one *must* be hardcoded; it's only meant to allow the default setting of `${teNOR}` to work.
-src/fortISSimO/teNOR/target/release/teNOR: src/fortISSimO/teNOR/Cargo.toml src/fortISSimO/teNOR/Cargo.lock $(wildcard src/fortISSimO/teNOR/src/*.rs)
+src/fortISSimO/teNOR/target/release/teNOR: src/fortISSimO/teNOR/Cargo.toml src/fortISSimO/teNOR/Cargo.lock $(shell find src/fortISSimO/teNOR/src -name '*.rs')
 	env -C src/fortISSimO/teNOR cargo build --release
