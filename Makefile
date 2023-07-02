@@ -38,7 +38,7 @@ obj/$2.o obj/$2.dbg: $1
 endef
 $(foreach asm_file,${SRCS},$(eval $(call assemble,${asm_file},$(basename $(notdir ${asm_file})))))
 
-obj/wyrmhole.o: src/fortISSimO/include/fortISSimO.inc
+obj/demo_song.o: src/fortISSimO/include/fortISSimO.inc
 obj/music_driver.o: src/fortISSimO/fortISSimO.asm src/fortISSimO/include/fortISSimO.inc
 
 obj/demo_song.asm: ${teNOR} src/demo_song.uge
