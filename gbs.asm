@@ -16,13 +16,13 @@ SECTION "GBS", ROM0[0]
 	db 0 ; Timer modulo (unused).
 	db 0 ; Timer control ("use VBlank").
 
-	db "Wyrmhole" ; Title string.
+	db "Jaded City" ; Title string.
 	ds $30 - @, 0
 
-	db "Coffee \"Valen\" Bat" ; Author string.
+	db "Cello2WC" ; Author string.
 	ds $50 - @, 0
 
-	db "2022" ; Copyright string.
+	db "2023" ; Copyright string.
 	ds $70 - @, 0
 
 INCBIN "bin/fO_demo.gb", MusicDriverLoadAddr

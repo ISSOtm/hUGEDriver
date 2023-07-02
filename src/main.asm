@@ -346,7 +346,7 @@ def WIN_SCANLINE equ 8 * 8 ; pixels.
 SECTION "Greetz", ROM0
 
 Greetz:
-	db "Coffee Bat (music), nitro2k01 & calc84maniac (optimisations), Eievui & PinoBatch (support code), GBDev (https://gbdev.io), ", 0, "and you (hacking)!"
+	db "Cello2WC (music), nitro2k01 & calc84maniac (optimisations), Eievui & PinoBatch (support code), GBDev (https://gbdev.io), ", 0, "and you (hacking)!"
 
 
 SECTION "STAT handler", ROM0[$0048]
