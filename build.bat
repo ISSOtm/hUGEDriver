@@ -9,7 +9,7 @@ rgbasm -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/include/ -o ob
 if %errorlevel% neq 0 call :exit 1
 rgbasm -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/include/ -o obj/main.o src/main.asm -DPRINT_DEBUGFILE >obj/main.dbg
 if %errorlevel% neq 0 call :exit 1
-rgbasm -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/include/ -o obj/music.o src/music.asm -DPRINT_DEBUGFILE >obj/music.dbg
+rgbasm -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/include/ -o obj/music_driver.o src/music_driver.asm -DPRINT_DEBUGFILE >obj/music_driver.dbg
 if %errorlevel% neq 0 call :exit 1
 src\fortISSimO\teNOR\teNOR.exe src/demo_song.uge obj/demo_song.asm --section-type ROMX --song-descriptor DemoSong
 if %errorlevel% neq 0 call :exit 1
@@ -18,7 +18,7 @@ if %errorlevel% neq 0 call :exit 1
 
 echo @debugfile 1.0.0 >bin/fO_demo.dbg
 for %%f in (obj/*.dbg) do echo @include "../%%f" >>bin/fO_demo.dbg
-rgblink -p 0xFF -d -m bin/fO_demo.map -n bin/fO_demo.sym -o bin/fO_demo.gb obj/bcd.o obj/demo_song.o obj/main.o obj/music.o
+rgblink -p 0xFF -d -m bin/fO_demo.map -n bin/fO_demo.sym -o bin/fO_demo.gb obj/bcd.o obj/demo_song.o obj/main.o obj/music_driver.o
 if %errorlevel% neq 0 call :exit 1
 rgbfix -p 0xFF -v bin/fO_demo.gb
 if %errorlevel% neq 0 call :exit 1
