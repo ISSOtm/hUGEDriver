@@ -4,16 +4,16 @@
 For instructions on how to use fortISSimO in your project, [please check out its readme](https://github.com/ISSOtm/fortISSimO#readme).
 This repo is a simple-ish example project that allows you to create a GB ROM and a GBS file from a hUGETracker export:
 
-0. **Prerequisites**: have [RGBDS](https://rgbds.gbdev.io) and GNU Make installed. (Windows users will probably need [WSL](https://learn.microsoft.com/en-us/windows/wsl/), [MSYS2](https://www.msys2.org), or Cygwin.) If you want to make a GBS file, you must also have `sed` in your PATH.
+0. **Prerequisites**: have [RGBDS](https://rgbds.gbdev.io) and GNU Make installed.
+   (Windows users will probably need [WSL](https://learn.microsoft.com/en-us/windows/wsl/), [MSYS2](https://www.msys2.org), or Cygwin.)
+   If you want to make a GBS file, you must also have `sed` in your PATH.
 1. `src/fortISSImO/` is a Git submodule, so it will be empty by default.
    With Git, use `git clone --recursive`, or run `git submodule update --init` after cloning.
    If you downloaded this repo as a ZIP, you must download and extract fortISSimO separately.
-2. Delete `src/wyrmhole.asm`.
-3. Export your song from hUGETracker using the "Export RGBDS .asm..." option; you can use any song descriptor.
-4. Copy the generated `<song descriptor>.asm` file under `src/`.
-5. Look for `ld de, wyrmhole` in `src/main.asm`; replace `wyrmhole` with the song descriptor you used in step 3.
-6. From the same directory as the `Makefile`, run `make` (or `make bin/example.gb` if you don't want the GBS).
-7. Enjoy `bin/example.gb` and `bin/example.gbs`, best served hot!
+2. Replace `demo_song.uge` in the `src/` directory with the song you want to play.
+3. From the same directory as the `Makefile`, run `make` (or `make gbs` if you want the GBS, or `make all` for both).
+   By default, this will attempt to build [teNOR](https://eldred.fr/fortISSimO/teNOR) from source, which requires [Rust to be installed](https://www.rust-lang.org/tools/install); alternatively, you can point the `teNOR` variable at a teNOR binary, e.g. `make gbs teNOR=./teNOR.exe`.
+4. Enjoy `bin/example.gb` and/or `bin/example.gbs`, best served hot!
 
 Having trouble?
 Please [file an issue](https://github.com/ISSOtm/fortISSimO-demo/issues/new), or contact me!
@@ -42,25 +42,25 @@ Bars are coloured depending on their height:
 - \[0; 7\] pixels: light gray
 - \[8; 15\] pixels: dark gray
 - \[16; 23\] pixels: black
-- More: this shouldn't happen, and will be signalled by the bar being empty. Please [file an issue](https://github.com/ISSOtm/fortISSimO-demo/issues/new) if this happens to you.
+- 24 or more: this shouldn't happen, and will be signalled by the bar being empty. Please [file an issue](https://github.com/ISSOtm/fortISSimO-demo/issues/new) if this happens to you.
 
-The graph usually looks fairly static, but this is normal if your song contains mostly repeated rows.
+The graph can look fairly static, but this is normal if your song contains mostly repeated rows.
 
 ## Acknowledgements
 
-- **[SuperDisk](https://github.com/SuperDisk)** created [the original driver](https://github.com/SuperDisk/hUGEDriver), and has helped a lot throughout the project.
+- **[SuperDisk](https://github.com/SuperDisk)** created [the original driver](https://github.com/SuperDisk/hUGEDriver), composed the demo song, and has helped a lot throughout the project.
   Thanks a *lot*, man!
-- [Coffee Bat](https://github.com/datguywitha3ds) composed *Wyrmhole*, the song used as an example, and gave some feedback during driver development.
+- [Cello2WC](https://www.cello2wc.com/portfolio-pixel.php) composed the music used in this demo.
 - [Evie](https://github.com/eievui5) and [PinoBatch](https://github.com/pinobatch) provided some support code.
 
 ## See also
 
 - [gbsdiff](https://github.com/ISSOtm/gbsdiff) was used to identify differences between this driver and hUGEDriver.
-- [BGB](https://bgb.bircd.org) was used to debug the driver.
+- [Emulicious](https://emulicious.net) and [BGB](https://bgb.bircd.org) were used to debug the driver.
 
 ## License
 
 hUGETracker and hUGEDriver are dedicated to the public domain.
-fortISSimO and all of this example's code is the same, unless otherwise stated; for example, `bcd.asm` from [PinoBatch](https://github.com/pinobatch) is under the Zlib license.
+fortISSimO and all of this demo's code is the same, unless otherwise stated; for example, `bcd.asm` from [PinoBatch](https://github.com/pinobatch) is under the Zlib license.
 
 `wyrmhole.asm` is exported from [the example song](https://github.com/SuperDisk/hUGETracker/blob/hUGETracker/Resources/Sample%20Songs/Coffee%20Bat%20-%20Wyrmhole.uge) *Wyrmhole* bundled with hUGETracker, by [Coffee "Valen" Bat](https://github.com/datguywitha3ds), and used with permission for demonstration purposes.
