@@ -29,6 +29,7 @@ bin/fO_demo.gb bin/fO_demo.sym bin/fO_demo.map: ${OBJS}
 	${RGBFIX} -p 0xFF -v bin/fO_demo.gb
 
 bin/fO_demo.dbg:
+	@mkdir -p ${@D}
 	printf '@debugfile 1.0.0\n@include "../%s"\n' ${OBJS:.o=.dbg} >$@
 
 define assemble
