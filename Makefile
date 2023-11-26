@@ -7,7 +7,7 @@ RGBLINK := rgblink
 RGBFIX  := rgbfix
 RGBGFX  := rgbgfx
 
-teNOR := src/fortISSimO/teNOR/target/release/teNOR
+teNOR := src/fortISSimO/target/release/teNOR
 
 
 SRCS := $(wildcard src/*.asm) obj/demo_song.asm
@@ -64,5 +64,5 @@ obj/main.o: obj/chicago8x8.2bpp
 
 
 # That one *must* be hardcoded; it's only meant to allow the default setting of `${teNOR}` to work.
-src/fortISSimO/teNOR/target/release/teNOR: src/fortISSimO/teNOR/Cargo.toml src/fortISSimO/teNOR/Cargo.lock $(shell find src/fortISSimO/teNOR/src -name '*.rs')
-	env -C src/fortISSimO/teNOR cargo build --release
+src/fortISSimO/target/release/teNOR: src/fortISSimO/Cargo.toml src/fortISSimO/Cargo.lock $(shell find src/fortISSimO/teNOR/src -name '*.rs')
+	env -C src/fortISSimO cargo build -rq
