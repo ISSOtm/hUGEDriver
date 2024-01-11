@@ -21,7 +21,7 @@ EntryPoint:
 	; Turn on the APU, and set the panning & volume to reasonable defaults.
 	ld a, AUDENA_ON
 	ldh [rNR52], a
-	ld a, $FF
+	ld a, [Nr51Mask] ; Normally this reads $FF, except for the single-channel ROMs.
 	ldh [rNR51], a
 	ld a, $77
 	ldh [rNR50], a

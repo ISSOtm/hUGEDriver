@@ -1,0 +1,3 @@
+SECTION "NR51 mask", ROM0
+Nr51Mask::
+	db NR51_MASK
