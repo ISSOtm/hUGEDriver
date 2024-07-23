@@ -4,3 +4,5 @@
 [submodule "src/fortISSimO"]
 	path = src/fortISSimO
 	url = https://github.com/ISSOtm/fortISSimO.git
+	branch = master
+	update = rebase
