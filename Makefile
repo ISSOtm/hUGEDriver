@@ -44,7 +44,7 @@ bin/fO_demo.gb: AUXFILES = -m bin/$*.map -n bin/$*.sym
 define assemble
 obj/$2.o obj/$2.dbg: $1
 	@mkdir -p $${@D}
-	$${RGBASM} -Wall -Wextra -h -p 0xFF -I src/include/ -I src/fortISSimO/include/ -o obj/$2.o $$< -DPRINT_DEBUGFILE >obj/$2.dbg
+	$${RGBASM} -Wall -Wextra -p 0xFF -I src/include/ -I src/fortISSimO/include/ -o obj/$2.o $$< -DPRINT_DEBUGFILE >obj/$2.dbg
 endef
 $(foreach asm_file,${SRCS},$(eval $(call assemble,${asm_file},$(basename $(notdir ${asm_file})))))
 
@@ -57,7 +57,7 @@ obj/demo_song.asm: ${teNOR} src/demo_song.uge
 
 obj/nr51_mask.%.o: nr51_mask.asm
 	@mkdir -p ${@D}
-	${RGBASM} -Wall -Wextra -h -p 0xFF -o $@ $< -DNR51_MASK=\$$$*$*
+	${RGBASM} -Wall -Wextra -p 0xFF -o $@ $< -DNR51_MASK=\$$$*$*
 
 
 bin/fO_demo.gbs: gbs.asm obj/syms.asm bin/fO_demo.gb
