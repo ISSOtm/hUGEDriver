@@ -82,4 +82,4 @@ obj/main.o: obj/chicago8x8.2bpp
 
 # That one *must* be hardcoded; it's only meant to allow the default setting of `${teNOR}` to work.
 src/fortISSimO/target/release/teNOR: src/fortISSimO/Cargo.toml src/fortISSimO/Cargo.lock $(shell find src/fortISSimO/teNOR/src -name '*.rs')
-	env -C src/fortISSimO cargo build -rq
+	(cd src/fortISSimO && cargo build -rq)
