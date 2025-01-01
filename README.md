@@ -4,7 +4,7 @@
 For instructions on how to use fortISSimO in your project, [please check out its readme](https://github.com/ISSOtm/fortISSimO#readme).
 This repo is a simple-ish example project that allows you to create a GB ROM and a GBS file from a hUGETracker export:
 
-0. **Prerequisites**: have [RGBDS](https://rgbds.gbdev.io) and GNU Make installed.
+0. **Prerequisites**: have [RGBDS](https://rgbds.gbdev.io) v0.9.0 or later, and GNU Make installed.
    (Windows users will probably need [WSL](https://learn.microsoft.com/en-us/windows/wsl/), [MSYS2](https://www.msys2.org), or Cygwin.)
    If you want to make a GBS file, you must also have `sed` in your PATH.
 1. `src/fortISSImO/` is a Git submodule, so it will be empty by default.
@@ -39,6 +39,7 @@ On average, fortISSimO appears to be a handful of scanlines faster than hUGEDriv
 The CPU graph shows how many scanlines (screen lines, equivalent to 114 CPU M-cycles) the driver took to perform its update.
 The measure is rounded down.
 Bars are coloured depending on their height:
+
 - \[0; 7\] pixels: light gray
 - \[8; 15\] pixels: dark gray
 - \[16; 23\] pixels: black
@@ -49,7 +50,7 @@ The graph can look fairly static, but this is normal if your song contains mostl
 ## Acknowledgements
 
 - **[SuperDisk](https://github.com/SuperDisk)** created [the original driver](https://github.com/SuperDisk/hUGEDriver), composed the demo song, and has helped a lot throughout the project.
-  Thanks a *lot*, man!
+  Thanks a _lot_, man!
 - [Cello2WC](https://www.cello2wc.com/portfolio-pixel.php) composed the music used in this demo.
 - [Evie](https://github.com/eievui5) and [PinoBatch](https://github.com/pinobatch) provided some support code.
 
