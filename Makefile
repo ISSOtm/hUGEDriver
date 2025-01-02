@@ -57,7 +57,7 @@ obj/music_driver.o: src/fortISSimO/fortISSimO.asm src/fortISSimO/include/fortISS
 
 obj/demo_song.asm: ${teNOR} src/demo_song.uge
 	@mkdir -p ${@D}
-	$^ $@ --section-type ROMX --song-descriptor DemoSong
+	$^ $@ --section-type ROMX --descriptor DemoSong --vblank
 
 obj/nr51_mask.%.o: nr51_mask.asm
 	@mkdir -p ${@D}
